@@ -1,0 +1,12 @@
+appId: com.ghostwriter.taplokal
+productName: TapLokal Kiosk
+copyright: Copyright © 2024 TapLokal
+directories:
+  output: dist
+  buildResources: resources
+files:
+  - from: .
+    filter:
+      - package.json
+      - app
+publish: null
