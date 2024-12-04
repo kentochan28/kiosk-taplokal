@@ -58,7 +58,7 @@ const TablePage = () => {
               {isAllOccupied && (
                 <button
                   onClick={() => handleTable(0)}
-                  className="p-2 h-40 content-center rounded-xl bg-foreground/10 text-foreground hover:bg-foreground hover:text-white"
+                  className="p-2 h-40 content-center rounded-xl bg-yellow-500 text-white hover:bg-yellow-600"
                 >
                   Another table
                 </button>
