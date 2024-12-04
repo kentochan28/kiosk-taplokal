@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 export default function HomePage() {
   const router = useRouter();
 
-  // Function to handle method selection and navigate
   const handleMethod = (method: string) => {
     localStorage.setItem("method", method);
     router.push("/table");

@@ -72,14 +72,16 @@ const IdleTimer = () => {
             <h2 className="text-2xl font-extrabold text-gray-800">
               Redirecting Soon...
             </h2>
+            {/* Warning Message */}
             <p className="mt-4 text-xl text-gray-600">
-              No activity detected. You will be redirected to the home page in{" "}
+              No activity detected. Your order will be{" "}
+              <span className="text-red-500 font-bold">RESET</span> and you will
+              be redirected to the home page in{" "}
               <span className="text-red-500 font-bold text-2xl">
                 {timeLeft}
               </span>{" "}
-              seconds.
+              seconds. Please confirm to continue your session.
             </p>
-
             <div className="mt-8">
               <button
                 onClick={cancelRedirect} // Assuming you have a cancel function

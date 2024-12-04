@@ -9,7 +9,7 @@ interface Table {
   status: string;
 }
 
-const Page = () => {
+const TablePage = () => {
   const router = useRouter();
   const [tableOccupied, setTableOccupied] = useState<Table[]>([]);
   const [method, setMethod] = useState<string>("");
@@ -18,22 +18,24 @@ const Page = () => {
     const storedMethod = localStorage.getItem("method");
     setMethod(storedMethod || "takeout");
 
-    const retrieveTableOccupied = async () => {
+    const fetchTables = async () => {
       const tablesCollection = collection(fs, "tables");
-      const q = query(tablesCollection, where("status", "==", "occupied"));
-      onSnapshot(q, (querySnapshot) => {
-        const tables = querySnapshot.docs.map((doc) => doc.data());
-        setTableOccupied(tables as Table[]);
+      const q = query(tablesCollection, where("status", "==", "occupied")); // Only fetch occupied tables
+      onSnapshot(q, (snapshot) => {
+        const tables = snapshot.docs.map((doc) => doc.data() as Table);
+        setTableOccupied(tables);
       });
     };
 
-    retrieveTableOccupied();
+    fetchTables();
   }, []);
 
   const handleTable = (tableNumber: number) => {
     localStorage.setItem("tableNumber", tableNumber.toString());
     router.push("/category");
   };
+
+  const isAllOccupied = tableOccupied.length >= 25; // Check if all 25 tables are occupied
 
   return (
     <div className="py-10 mx-auto container px-40">
@@ -52,26 +54,36 @@ const Page = () => {
               <p>Not seated</p>
             </button>
           ) : (
-            Array.from({ length: 25 }, (_, i) =>
-              tableOccupied.some(
-                (table: Table) => table.tableNumber === i + 1
-              ) ? (
-                <p
-                  key={i}
-                  className="p-2 rounded-xl bg-foreground text-white h-40 content-center cursor-not-allowed"
-                >
-                  Occupied
-                </p>
-              ) : (
+            <>
+              {isAllOccupied && (
                 <button
-                  key={i}
-                  onClick={() => handleTable(i + 1)}
+                  onClick={() => handleTable(0)}
                   className="p-2 h-40 content-center rounded-xl bg-foreground/10 text-foreground hover:bg-foreground hover:text-white"
                 >
-                  {i + 1}
+                  Another table
                 </button>
-              )
-            )
+              )}
+              {Array.from({ length: 25 }, (_, i) =>
+                tableOccupied.some(
+                  (table: Table) => table.tableNumber === i + 1
+                ) ? (
+                  <p
+                    key={i}
+                    className="p-2 rounded-xl bg-foreground text-white h-40 content-center cursor-not-allowed"
+                  >
+                    Occupied
+                  </p>
+                ) : (
+                  <button
+                    key={i}
+                    onClick={() => handleTable(i + 1)}
+                    className="p-2 h-40 content-center rounded-xl bg-foreground/10 text-foreground hover:bg-foreground hover:text-white"
+                  >
+                    {i + 1}
+                  </button>
+                )
+              )}
+            </>
           )}
         </div>
       </div>
@@ -79,4 +91,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default TablePage;
